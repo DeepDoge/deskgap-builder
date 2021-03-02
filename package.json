@@ -1,0 +1,25 @@
+{
+  "name": "@dumshiba/deskgap-builder",
+  "version": "0.1.0",
+  "description": "",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc"
+  },
+  "bin": {
+    "deskgap-builder": "./dist/build.js"
+  },
+  "keywords": [],
+  "author": "dumshiba",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^14.14.31",
+    "@types/unzip": "^0.1.1",
+    "@types/yargs": "^16.0.0",
+    "install": "^0.13.0",
+    "unzip": "^0.1.11",
+    "yargs": "^13.2.4"
+  },
+  "dependencies": {}
+}
