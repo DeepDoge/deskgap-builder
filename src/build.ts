@@ -1,50 +1,57 @@
+#!/usr/bin/env node
+
 import * as fs from 'fs'
 import * as yargs from 'yargs'
-import * as http from 'http'
 import * as os from 'os'
 import * as path from 'path'
-import * as unzip from 'unzip'
-import { copyFolderRecursiveSync } from './copy'
+import * as adm from 'adm-zip'
+import { copyFolderRecursiveSync, removeDir } from './copy'
 
 const options = yargs
     .usage("Usage: -a <api root directory> -a <render root directory> -o <output directory> -s <target os (linux, macos, windows)>")
-    .option("a", { alias: "apiRootDir", describe: "Api Root Directory", type: "string", demandOption: true })
-    .option("r", { alias: "renderRootDir", describe: "Renderer Root Directory", type: "string", demandOption: true })
+    .option("r", { alias: "rootDir", describe: "Root Directory", type: "string", demandOption: true })
     .option("o", { alias: "outDir", describe: "Output Directory", type: "string", demandOption: true })
     .option("s", { alias: "targetOS", describe: "Target OS", type: "string", demandOption: true })
     .argv
 
-const osTempDir = os.tmpdir()
-fs.mkdtemp(`${osTempDir}${path.sep}deskgap-builder`, (err, dir) =>
+const dir = path.join(os.tmpdir(), 'deskgap-builder', 'dl')
+if (!fs.existsSync(dir)) fs.mkdirSync(dir)
+
+const link = (() =>
 {
-    if (err) throw err
-
-    const link = (() =>
+    switch (options.s)
     {
-        switch (options.s)
-        {
-            case 'linux':
-                return 'https://deskgap.com/dl/linux'
-            case 'macos':
-                return 'https://deskgap.com/dl/macos'
-            case 'windows':
-                return 'https://deskgap.com/dl/win32'
-        }
+        case 'linux':
+            return 'https://dl.bintray.com/patr0nus/DeskGap/deskgap-v0.2.0-linux-x64.zip'
+        case 'macos':
+            return 'https://dl.bintray.com/patr0nus/DeskGap/deskgap-v0.2.0-darwin-x64.zip'
+        case 'windows':
+            return 'https://dl.bintray.com/patr0nus/DeskGap/deskgap-v0.2.0-win32-ia32.zip'
+    }
 
-        throw new Error(`unkown os target: ${options.s}`)
-    })()
+    throw new Error(`unkown os target: ${options.s}`)
+})()
 
-    const buildZipPath = `${dir}${path.sep}build-${options.s}.zip`
-    if (!fs.existsSync(buildZipPath))
-        http.get(link, (response) => response.pipe(fs.createWriteStream(buildZipPath)))
+const buildZipPath = path.join(dir, `build-${options.s}.zip`)
+if (!fs.existsSync(buildZipPath))
+{
+    fs.writeFileSync(buildZipPath, require('child_process').execFileSync('curl', ['--silent', '-L', link]))
+}
 
-    fs.createReadStream(buildZipPath).pipe(unzip.Extract({ path: options.o }))
+if (fs.existsSync(options.o)) removeDir(options.o)
+new adm(buildZipPath).extractAllTo(options.o)
 
-    const appOutputPath = `${options.o}${path.sep}resources${path.sep}app`
-    
-    fs.rmdirSync(appOutputPath, { recursive: true })
-    fs.mkdirSync(appOutputPath)
+const appOutputPath = path.join(options.o, 'DeskGap', 'resources', 'app')
 
-    copyFolderRecursiveSync(options.r, appOutputPath)
-    copyFolderRecursiveSync(options.a, appOutputPath)
-})
+const pack = JSON.parse(fs.readFileSync('package.json', { encoding: 'utf-8' }))
+const appPack = {
+    name: pack.name,
+    main: 'main.js'
+}
+
+
+removeDir(appOutputPath)
+fs.mkdirSync(appOutputPath)
+
+copyFolderRecursiveSync(options.r, appOutputPath, true)
+fs.writeFileSync(path.join(appOutputPath, 'package.json'), JSON.stringify(appPack))
