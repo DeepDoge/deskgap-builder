@@ -1,9 +1,14 @@
 # deskgap-builder
 builder for DeskGap (https://github.com/patr0nus/DeskGap/)
 
+# install
+```bash
+npm i @dumshiba/deskgap-builder --save-dev
+```
+
 # usage
 ```bash
-    deskgap-builder  -r <root directory> -o <output directory> -s <target os (linux, macos, windows)>
+deskgap-builder  -r <root directory> -o <output directory> -s <target os (linux, macos, windows)>
 ```
 
 # vue+typescript example
