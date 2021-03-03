@@ -7,7 +7,7 @@ builder for DeskGap (https://github.com/patr0nus/DeskGap/)
 ```
 
 # vue+typescript example
-- file structure
+## file structure
 ```js
 project-dir/
 ├── package.json
@@ -18,7 +18,7 @@ project-dir/
 └── app/
     └──  main.ts // deskgap node entry point
 ```
-- package.json
+## package.json
 ```json
 "scripts": 
 {
@@ -27,4 +27,6 @@ project-dir/
     "build:deskgap": "npm run build:compile && deskgap-builder -r ./dist -o ./out -s windows",
     "build": "npm run build:render && npm run build:deskgap"
 }
+
+also don't forget to add `out/` in .gitignore
 ```
