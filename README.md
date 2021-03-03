@@ -27,6 +27,6 @@ project-dir/
     "build:deskgap": "npm run build:compile && deskgap-builder -r ./dist -o ./out -s windows",
     "build": "npm run build:render && npm run build:deskgap"
 }
+```
 
 also don't forget to add `out/` in .gitignore
-```
