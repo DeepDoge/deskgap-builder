@@ -8,7 +8,7 @@ import * as adm from 'adm-zip'
 import { copyFolderRecursiveSync, removeDir } from './copy'
 
 const options = yargs
-    .usage("Usage: -a <api root directory> -a <render root directory> -o <output directory> -s <target os (linux, macos, windows)>")
+    .usage("Usage: -r <root directory> -o <output directory> -s <target os (linux, macos, windows)>")
     .option("r", { alias: "rootDir", describe: "Root Directory", type: "string", demandOption: true })
     .option("o", { alias: "outDir", describe: "Output Directory", type: "string", demandOption: true })
     .option("s", { alias: "targetOS", describe: "Target OS", type: "string", demandOption: true })
