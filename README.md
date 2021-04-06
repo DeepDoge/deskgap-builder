@@ -33,5 +33,15 @@ project-dir/
     "build": "npm run build:render && npm run build:deskgap"
 }
 ```
+## app/main.ts
+```ts
+import { app, BrowserWindow } from 'deskgap'
+
+app.once('ready', () => 
+{
+    const win = new BrowserWindow({ title: "My App" })
+    win.loadFile('index.html')
+})
+```
 
 also don't forget to add `out/` in .gitignore
