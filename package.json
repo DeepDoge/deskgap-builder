@@ -1,6 +1,6 @@
 {
   "name": "@dumshiba/deskgap-builder",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "builder for deskgap",
   "types": "dist/index.d.ts",
   "scripts": {
