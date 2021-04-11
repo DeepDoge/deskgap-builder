@@ -43,5 +43,4 @@ app.once('ready', () =>
     win.loadFile('index.html')
 })
 ```
-also you need to configure vue for ie11
 also don't forget to add `out/` in .gitignore
